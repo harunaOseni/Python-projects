@@ -1,0 +1,36 @@
+___ USEFUL ICONS ___: ✔
+
+---TODO 1--- Question class (✔)
+create a class named "Question" in the "question_model.py" module
+this class should be initialized with the following user defined attributes: 
+"question" and "text"
+
+---- TODO 2 --- main program (✔)  
+create an empty list called "question_bank" which will hold every
+question object created in the Question class
+
+--- TODO 3 --- main program (✔)
+loop through data and create a Question object for each data and append them 
+to the "question_bank" list 
+
+--- TODO 4 --- QuizBrain class (✔)
+create a QuizBrain class, this class should be initialized with a user defined and 
+default attribute named "question_list" an object and "question_number" repectively
+which will be set to 0. 
+
+--- TODO 5 --- QuizBrain class (✔)
+create a method called "next_question" which will increment the "question_number"
+and change the question being asked to the next question in the "question_bank"
+
+--- TODO 6 --- QuizBrain class (✔)
+create a method called "more_questions" which will return True if they are more question and false if not
+
+--- TODO 7 --- QuizBrain class (✔)
+create a method called "check_answer" which will check the user input against the
+correct answer and return a boolean value
+
+--- TODO 8 --- QuizBrain class (✔)
+create a method called show_final_score which will print out the final score
+
+--- TODO 9 --- main program ()
+create a while loop which will keep running next question until there isn't any question left.
