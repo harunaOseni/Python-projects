@@ -13,7 +13,15 @@ class Snake():
             self.snake_body.goto(x=self.x_position[snake_body], y=0)
             self.snake_body.shapesize(stretch_len=1)
             self.snake.append(self.snake_body)
-        self.screen = Screen()
+
+    def snake_grow(self):
+        for snake_body in range(1):
+            self.snake_body = Turtle(shape="square")
+            self.snake_body.color("white")
+            self.snake_body.penup()
+            self.snake_body.goto(x=self.x_position[snake_body], y=0)
+            self.snake_body.shapesize(stretch_len=1)
+            self.snake.append(self.snake_body)
 
     def move(self):
         for snake_body in range(len(self.snake) - 1, 0, -1):
