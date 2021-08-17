@@ -1,40 +1,50 @@
-# Turtle crossing game
-from turtle import Screen, time
-from player import Player
-from car_manager import CarManager
-from scoreboard import Scoreboard
+from turtle import Turtle, Screen, time
+from snake import Snake
+from food import Food
+from board import Board
 
 screen = Screen()
-screen.setup(width=600, height=600)
+screen.setup(600, 600)
+screen.bgcolor("black")
+screen.title("Snake in the monkey shadow")
 screen.tracer(0)
-screen.bgcolor("white")
+
+snake = Snake()
+food = Food()
+score_board = Board() 
 
 
-player = Player()
-car_manager = CarManager() 
-score_board = Scoreboard()
+# snake game controls
+screen.listen()
+screen.onkey(snake.left, "Left")
+screen.onkey(snake.right, "Right")
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.down, "Down")
 
-screen.listen() 
-screen.onkey(player.move_up, "Up")
 
+game_is_running = True
 
-game_is_on = True
-while game_is_on:
-    time.sleep(car_manager.car_speed)
+while game_is_running:
+    snake.move()
     screen.update()
+    time.sleep(0.05)
 
-    car_manager.create_cars()
-    car_manager.move_cars()
+    #code to detect collision between snake and food
+    if snake.snake[0].distance(food) < 15:
+        food.move_food() # move food to a random position
+        score_board.update_score()
+        snake.snake_grow()
 
-    if player.ycor() >= 280:
-        score_board.update_level()
-        car_manager.car_speed *= 0.9
-        player.refresh()
+    #code to detect collision between walls 
+    if snake.snake[0].xcor() > 285 or snake.snake[0].xcor() < -285 or snake.snake[0].ycor() > 285 or snake.snake[0].ycor() < -285:
+        score_board.reset_score()
+        snake.reset() 
+
+    #code to detect collision between snake and itself
+    for i in range(1, len(snake.snake)):
+        if snake.snake[0].distance(snake.snake[i]) < 5:
+            score_board.reset_score() 
     
-    for car in car_manager.cars:
-        if player.distance(car) < 20:
-            game_is_on = False
-            score_board.game_over()
 
 
-screen.mainloop()
+screen.exitonclick() 
