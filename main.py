@@ -1,50 +1,36 @@
-from turtle import Turtle, Screen, time
-from snake import Snake
-from food import Food
-from board import Board
+student_dict = {
+    "student": ["Angela", "James", "Lily"], 
+    "score": [56, 76, 98]
+}
 
-screen = Screen()
-screen.setup(600, 600)
-screen.bgcolor("black")
-screen.title("Snake in the monkey shadow")
-screen.tracer(0)
+#Looping through dictionaries:
+for (key, value) in student_dict.items():
+    #Access key and value
+    pass
 
-snake = Snake()
-food = Food()
-score_board = Board() 
+import pandas
+student_data_frame = pandas.DataFrame(student_dict)
 
+#Loop through rows of a data frame
+for (index, row) in student_data_frame.iterrows():
+    #Access index and row
+    #Access row.student or row.score
+    pass
 
-# snake game controls
-screen.listen()
-screen.onkey(snake.left, "Left")
-screen.onkey(snake.right, "Right")
-screen.onkey(snake.up, "Up")
-screen.onkey(snake.down, "Down")
+# Keyword Method with iterrows()
+# {new_key:new_value for (index, row) in df.iterrows()}
 
+#TODO 1. Create a dictionary in this format:
+{"A": "Alfa", "B": "Bravo"}
 
-game_is_running = True
+#TODO 2. Create a list of the phonetic code words from a word that the user inputs.
 
-while game_is_running:
-    snake.move()
-    screen.update()
-    time.sleep(0.05)
+nato_dataframe = pandas.read_csv("nato_phonetic_alphabet.csv") 
+nato_dict = { row.letter:row.code for (index, row) in nato_dataframe.iterrows() }
 
-    #code to detect collision between snake and food
-    if snake.snake[0].distance(food) < 15:
-        food.move_food() # move food to a random position
-        score_board.update_score()
-        snake.snake_grow()
+users_word = input("Enter a word: ")
 
-    #code to detect collision between walls 
-    if snake.snake[0].xcor() > 285 or snake.snake[0].xcor() < -285 or snake.snake[0].ycor() > 285 or snake.snake[0].ycor() < -285:
-        score_board.reset_score()
-        snake.reset() 
+user_word_list = [word.upper() for word in users_word ]
 
-    #code to detect collision between snake and itself
-    for i in range(1, len(snake.snake)):
-        if snake.snake[0].distance(snake.snake[i]) < 5:
-            score_board.reset_score() 
-    
-
-
-screen.exitonclick() 
+user_word_list_nato = [nato_dict[letter] for letter in user_word_list]
+print(user_word_list_nato)
