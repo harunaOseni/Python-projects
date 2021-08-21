@@ -1,4 +1,0 @@
----turtle.colormode(cmode=None)---
-#basically lets the programmer choose how they would like python to interpret the number passed into the brackets for the colors.
-There are these options for cmode: 1 and 255.
-For the 255 option, the programmer can use numbers between 0 and 255
