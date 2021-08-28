@@ -18,7 +18,7 @@ parameter = {
     'lat': LAT,
     'lon': LONG,
     'appid': API_KEY
-}
+} 
 
 
 weather_response = requests.get(
