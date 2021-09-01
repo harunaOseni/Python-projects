@@ -37,10 +37,10 @@ mynew_position = (mylongitude-5, mylatitude+5)
 
 if ((iss_position[0] >= mynew_position[0] and iss_position[0] <= my_position[0]) and (iss_position[1] >= mynew_position[1] and iss_position[1] <= my_position[1])) and (todays_hour >= sunrise_data or todays_hour <= sunset_data):
     with smtplib.SMTP_SSL('smtp.gmail.com', 578) as connection:
-        connection.login('harunaoseni23@gmail.com', 'Oseni6716')
+        connection.login('', '')
         connection.starttls()
         subject = 'Alert'
         body = 'The ISS is over you!'
         email_text = f'Subject: {subject}\n\n{body}'
-        connection.sendmail(from_addr="harunaoseni23@gmail.com",
-                            to_addr="haruna.oseni2002@gmail.com", msg=f"Subject: {subject}\n\n{body}")
+        connection.sendmail(from_addr="",
+                            to_addr="", msg=f"Subject: {subject}\n\n{body}")

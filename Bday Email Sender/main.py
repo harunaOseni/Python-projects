@@ -7,8 +7,8 @@ current_date = dt.datetime.now()
 current_month = current_date.month
 current_day = current_date.day
 
-email = "harunaoseni23@gmail.com"
-password = "Oseni6716"
+email = ""
+password = ""
 
 random_index_number = random.randint(1, 3)
 
