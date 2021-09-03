@@ -38,7 +38,7 @@ driver.switch_to.window(login_page)
 email_field = driver.find_element_by_tag_name("input")
 
 # type email in the email field
-email_field.send_keys("cheskyarmstrong@gmail.com")
+email_field.send_keys("")
 # click enter
 email_field.send_keys(u'\ue007')
 
@@ -50,7 +50,7 @@ password_field = driver.find_element_by_xpath(
 t.sleep(3)
 
 # enter password
-password_field.send_keys("Best77077#")
+password_field.send_keys("")
 # click enter
 password_field.send_keys(u'\ue007')
 
