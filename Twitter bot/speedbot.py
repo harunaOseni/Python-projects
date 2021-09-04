@@ -7,8 +7,8 @@ import time
 PROMISED_DOWN = 150
 PROMISED_UP = 10
 CHROME_DRIVER_PATH = r"C:\Users\oseni haruna\OneDrive\Documents\programming resources\chromedriver.exe"
-TWITTER_USERNAME = "ArmstrongChesky"
-TWITTER_PASSWORD = "Oseni6716"
+TWITTER_USERNAME = ""
+TWITTER_PASSWORD = ""
 
 
 class InternetSpeedTwitterBot:
