@@ -53,4 +53,4 @@ spotify_playlist_id = spotify_playlist['id']
 # add songs to the playlist
 for song in songs_uri:
     sp.user_playlist_add_tracks(
-        user=username, playlist_id=spotify_playlist_id, tracks=[song])
+        user=username, playlist_id=spotify_playlist_id, tracks=[song]) 
