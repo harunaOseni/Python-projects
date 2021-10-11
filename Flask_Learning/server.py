@@ -1,6 +1,8 @@
 from flask import Flask
+import random
 app = Flask(__name__)
 
+#Higher Or Lower Game
 
 def make_bold(function):
     def wrapper_function():
@@ -22,23 +24,23 @@ def make_underlined(function):
 
 @app.route('/')  # A python decorator that tells flask what url to listen for
 @make_bold
-@make_emphasis
-@make_underlined
-def hello_world():
-    return 'This is junior typing to the web from my nice room, how do you do?'
+def game_intro():
+    return '<h1>Guess a number between 0 and 9</h1> \
+        <img src="https://media.giphy.com/media/13RcbHeXlLNysE/giphy.gif">'
 
+@app.route('/<int:guess>')
+def result(guess): 
+    number = random.randint(0,9)
+    if guess == number:
+        return '<h1>You guessed the number!</h1> \
+            <img src="https://media.giphy.com/media/PS7d4tm1Hq6Sk/giphy.gif"/>'
+    elif guess > number:
+        return '<h1>You guessed too high!</h1> \
+            <img src="https://media.giphy.com/media/2cei8MJiL2OWga5XoC/giphy.gif"/>'
+    else:
+        return '<h1>You guessed too low!</h1> \
+            <img src="https://media.giphy.com/media/ySsepgFviNzz8O8Yvj/giphy.gif"/>'
 
-@app.route('/fuckoff')
-def hello():
-    return 'fuck off you\'re not supposed to be here'
-
-
-@app.route('/<name>')
-def hello_name(name):
-    return f'<h1 style = {"text-align:center;"}>Hello {name}!</h1> \
-        <p>You\'re a piece of shit, fuck you moron!</p> \
-        <p> Bye Bitch! </p> \
-        <img src="https://media.giphy.com/media/YorwDAH66ln3O/giphy.gif" />'
 
 
 if __name__ == '__main__':
