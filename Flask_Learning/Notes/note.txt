@@ -1,0 +1,16 @@
+NOTES ON THE FLASK FRAMEWORK 
+
+# Flask is a microframework for Python. 
+It is a thin layer on top of the Python standard library, which helps in running up 
+a server and making web applications.
+
+# if __name__ == “__main__” is the part of the program that runs when the 
+script is run from the command line using a command like python File1.py.
+
+# App routing is used to map the specific URL with the associated function that is 
+intended to perform some task. It is used to access some particular page
+
+# By definition, a decorator is a function that takes another function and 
+extends the behavior of the latter function without explicitly modifying it
+
+# Syntactic sugar is a syntax that allow developers to write code easier.
