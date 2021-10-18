@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from post import Post
 from flask import request
+import smtplib
 
 app = Flask(__name__)
 blog_post = Post()
@@ -20,10 +21,19 @@ def about():
 def contact():
     if request.method == "POST":
         data = request.form
-        print(data["name"])
-        print(data["email"])
-        print(data["phone"])
-        print(data["message"])
+        #name, email, phone, message
+        name = data["name"]
+        email = data["email"]
+        phone = data["phone"]
+        message = data["message"]
+        with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+            smtp.starttls()
+            smtp.login('harunaoseni23@gmail.com', 'Oseni6716')
+            subject = "Acquisition Blog Form Entry"
+            body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+            msg = f"Subject: {subject}\n\n{body}"
+            smtp.sendmail('harunaoseni23@gmail.com', 'harunaoseni23@gmail.com', msg)
+
         return render_template("contact.html", msg_sent=True)
     return render_template("contact.html", msg_sent=False)
 
