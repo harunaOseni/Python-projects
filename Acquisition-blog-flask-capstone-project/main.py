@@ -28,7 +28,7 @@ def contact():
         message = data["message"]
         with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
             smtp.starttls()
-            smtp.login('harunaoseni23@gmail.com', 'Oseni6716')
+            smtp.login('', '')
             subject = "Acquisition Blog Form Entry"
             body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
             msg = f"Subject: {subject}\n\n{body}"
