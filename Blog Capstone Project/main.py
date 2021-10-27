@@ -78,7 +78,27 @@ def contact():
 
 @app.route("/edit/<int:post_id>", methods=['GET', 'POST'])
 def edit_post(post_id):
-    pass
+    post = BlogPost.query.get(post_id)
+    form = CreatePostForm(
+        title=post.title,
+        subtitle=post.subtitle,
+        author=post.author,
+        img_url=post.img_url,
+        body=post.body
+    )
+    all_posts = BlogPost.query.all()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.subtitle = form.subtitle.data
+            post.author = form.author.data
+            post.img_url = form.img_url.data
+            post.body = form.body.data
+            db.session.commit()
+            return redirect(url_for('get_all_posts'))
+
+    if request.method == 'GET':
+        return render_template('edit.html', form=form, post=all_posts)
 
 
 @app.route("/new-post", methods=['GET', 'POST'])
@@ -98,6 +118,13 @@ def new_post():
         return redirect(url_for('get_all_posts'))
     return render_template("make-post.html", form=CreatePostForm())
 
+
+@app.route("/delete/<int:post_id>")
+def delete_post(post_id):
+    post = BlogPost.query.get(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('get_all_posts'))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
