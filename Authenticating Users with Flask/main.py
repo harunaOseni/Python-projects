@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
+from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -35,7 +35,8 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    print(current_user.is_authenticated)
+    return render_template("index.html", logged_in=current_user.is_authenticated)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -43,13 +44,16 @@ def register():
     if request.method == "POST":
         name = request.form["name"]
         email = request.form["email"]
+        if User.query.filter_by(email=email).first():
+            flash("User already exists, try a different email.")
+            return redirect(url_for("register"))
         password = generate_password_hash(
             password=request.form["password"], method="pbkdf2:sha256", salt_length=8)
         user = User(name=name, email=email, password=password)
-        db.session.add(user)e
+        db.session.add(user)
         db.session.commit()
-        return redirect(url_for('secrets', name=name.split()[0]))
-    return render_template("register.html")
+        return redirect(url_for('secrets', name=name.split()[0], logged_in=current_user.is_authenticated))
+    return render_template("register.html", logged_in=current_user.is_authenticated)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -60,10 +64,12 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(pwhash=user.password, password=password):
             login_user(user)
-            return redirect(url_for('secrets', name=user.name.split()[0], logged_in=True))
+            return redirect(url_for('secrets', name=user.name.split()[0], logged_in=current_user.is_authenticated))
         else:
-            flash("Please check your email and password")
-    return render_template("login.html", logged_in=False)
+            if check_password_hash(pwhash=user.password, password=password) == False:
+                flash("Password is incorrect, try another password")
+                return redirect(url_for('login'))
+    return render_template("login.html", logged_in=current_user.is_authenticated)
 
 
 @app.route('/secrets')
@@ -73,13 +79,20 @@ def secrets():
         return render_template("secrets.html", name=current_user.name.split()[0])
 
 
+@app.errorhandler(401)
+def unauthorized(error):
+    return Response(f"<h1>You're unauthorized to come here, get the fuck out, wanna know why, here: {error}</h1>", 401,
+                    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
 @app.route('/logout')
 @login_required
 def logout():
     if current_user.is_authenticated:
-        return logout_user()
+        logout_user()
+        return redirect(url_for('home', logged_in=False))
     else:
-        return flash("You are not logged in")
+        flash(message="You're not currently logged in.", category="error")
 
 
 @app.route('/download')
