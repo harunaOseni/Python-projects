@@ -1,5 +1,4 @@
-{% include "header.html" %}
-
+{% include "header.html" %} {% import "bootstrap/wtf.html" as wtf %}
 <!-- Page Header -->
 <header class="masthead" style="background-image: url('{{post.img_url}}')">
   <div class="overlay"></div>
@@ -39,23 +38,30 @@
         {% endif %}
 
         <!--           Comments Area -->
-        <div class="col-lg-8 col-md-10 mx-auto comment">
-          <ul class="commentList">
-            <li>
-              <div class="commenterImage">
-                <img
-                  src="https://pbs.twimg.com/profile_images/744849215675838464/IH0FNIXk.jpg"
-                />
-              </div>
-              <div class="commentText">
-                <p>Some comment</p>
-                <span class="date sub-text">comment author name</span>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <h3>
+          {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{
+          wtf.quick_form(form, novalidate=True, button_map={"submit":
+          "primary"}) }}
+        </h3>
       </div>
     </div>
+  </div>
+  <div class="col-lg-8 col-md-10 mx-auto comment">
+    <ul class="commentList">
+      {% for comment in comments %}
+      <li>
+        <div class="commenterImage">
+          <img
+            src={{comment.user.email|gravatar}}
+          />
+        </div>
+        <div class="commentText">
+          <p>{{comment.body | safe}}</p>
+          <span class="date sub-text">{{comment.user.username}}</span>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </article>
 

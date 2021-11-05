@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm, RegistrationForm, LoginForm
+from forms import CreatePostForm, RegistrationForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from decouple import config
 from functools import wraps
@@ -23,9 +23,12 @@ db = SQLAlchemy(app)
 app.secret_key = config('SECRET_KEY')
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+gravatar = Gravatar(app, size=100, rating='g', default='retro',
+                    force_default=False, force_lower=False)
 
 # CONFIGURE TABLES
+
+
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +36,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
     posts = db.relationship('BlogPost', backref='user')
+    comments = db.relationship('Comment', backref='user')
 
 
 db.create_all()
@@ -42,13 +46,27 @@ class BlogPost(db.Model):
     __tablename__ = "blog_posts"
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(
-        db.Integer, db.ForeignKey('users.id'), nullable=False)
-    author = db.Column(db.String(250), nullable=False)
-    title = db.Column(db.String(250), unique=True, nullable=False)
-    subtitle = db.Column(db.String(250), nullable=False)
+        db.Integer, db.ForeignKey('users.id'))
+    author = db.Column(db.String(250))
+    title = db.Column(db.String(250), unique=True)
+    subtitle = db.Column(db.String(250))
     date = db.Column(db.String(250), nullable=False)
     body = db.Column(db.Text, nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
+    comments = db.relationship('Comment', backref='blog_post')
+
+
+db.create_all()
+
+
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(
+        db.Integer, db.ForeignKey('users.id'))
+    body = db.Column(db.Text)
+    blog_post_id = db.Column(
+        db.Integer, db.ForeignKey('blog_posts.id'))
 
 
 db.create_all()
@@ -129,10 +147,22 @@ def logout():
     return redirect(url_for('get_all_posts'))
 
 
-@app.route("/post/<int:post_id>")
+@app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def show_post(post_id):
     requested_post = BlogPost.query.get(post_id)
-    return render_template("post.html", post=requested_post)
+    blog_post = BlogPost.query.get(post_id)
+    comments = blog_post.comments
+    comment_form = CommentForm()
+    if request.method == "POST":
+        if comment_form.validate_on_submit():
+            new_comment = Comment(
+                body=comment_form.body.data,
+                author_id=current_user.id,
+                blog_post_id=post_id)
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect(url_for('show_post', post_id=post_id))
+    return render_template("post.html", post=requested_post, form=comment_form, comments=comments, gravatar=gravatar)
 
 
 @app.route("/about")
@@ -177,7 +207,7 @@ def edit_post(post_id):
         author=post.author,
         body=post.body
     )
-    if request.method == "POST": 
+    if request.method == "POST":
         if edit_form.validate_on_submit():
             post.title = edit_form.title.data
             post.subtitle = edit_form.subtitle.data
